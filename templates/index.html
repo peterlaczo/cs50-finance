@@ -1,0 +1,57 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Portfolio
+{% endblock %}
+
+{% block main %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th class="text-start">Symbol</th>
+                <th class="text-start">Name</th>
+                <th class="text-start">Trade</th>
+                <th class="text-end">Shares</th>
+                <th class="text-end">Unit price</th>
+                <th class="text-end">TOTAL</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if holdings %}
+            {% for holding in holdings %}
+                <tr>
+                    <td class="text-start">{{ holding.symbol }}</td>
+                    <td class="text-start">{{ holding.name }}</td>
+                    <td class="text-center d-flex">
+                        <form class="row g-2" method="post">
+                            <input id="symbol" name="symbol" type="hidden" value="{{ holding.symbol }}">
+                            <div class="col-auto">
+                                <button formaction="/buy" type="submit" class="btn btn-warning">Buy</button>
+                            </div>
+                            <div class="col-auto">
+                                <button formaction="/sell" type="submit" class="btn btn-success">Sell</button>
+                            </div>
+                            <div class="col-auto">
+                                <input autocomplete="off" class="form-control" id="shares" name="shares" required placeholder="Shares" type="number" min="1">
+                            </div>
+                        </form>
+                    </td>
+                    <td class="text-end">{{ holding.total_shares }}</td>
+                    <td class="text-end">{{ holding.unit_price | usd }}</td>
+                    <td class="text-end">{{ holding.total_price | usd }}</td>
+                </tr>
+            {% endfor %}
+            {% endif %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td class="text-end fw-bold" colspan="5">Cash balance</td>
+                <td class="text-end">{{ cash | usd }}</td>
+            </tr>
+            <tr>
+                <td class="text-end fw-bold" colspan="5">TOTAL</td>
+                <td class="text-end">{{ total | usd }}</td>
+            </tr>
+        </tfoot>
+    </table>
+{% endblock %}
